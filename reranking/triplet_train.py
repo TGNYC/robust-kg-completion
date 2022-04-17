@@ -61,7 +61,7 @@ def main(args: argparse.ArgumentParser, writer=None):
     trainloader = DataLoader(
         train_dataset, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers, drop_last=True)
     model = triplet_utils.get_model(args)
-
+    model = torch.nn.DataParallel(model) #DATA PARALLEL
     eval_dataset = triplet_utils.get_dataset('valid', args)
     with open(os.path.join(args.output_dir, 'baseline_metrics.json'), 'w') as f:
         f.write(json.dumps(eval_dataset.baseline_metrics))
