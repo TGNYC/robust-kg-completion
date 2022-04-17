@@ -33,8 +33,8 @@ def eval_mix(model, eval_dataset, eval_loader, args, write_results=False):
         for batch in tqdm(eval_loader):
             triplets, labels = {key: val.to('cuda', non_blocking=True).view(-1, val.shape[-1]) for key, val in batch[0].items()}, batch[1].to('cuda', non_blocking=True)
             
-            preds.append(softmax(model(triplets).view(-1, args.topk)).to('cpu'))
-            all_labels.append(labels.to('cpu'))
+            preds.append(softmax(model(triplets).view(-1, args.topk)).to('cuda'))
+            all_labels.append(labels.to('cuda'))
 
                 
         all_preds = torch.cat(preds, dim=0)
@@ -118,7 +118,7 @@ def ranking_and_hits(model, eval_loader, args):
             preds = torch.sigmoid(model(triplets).view(-1, args.topk))                
             batch_ranks = torch.argsort(torch.argsort(preds, dim=1, descending=True), dim=1) + 1
 
-            ranks.append(batch_ranks[torch.nonzero(labels, as_tuple=True)].to('cpu'))           
+            ranks.append(batch_ranks[torch.nonzero(labels, as_tuple=True)].to('cuda'))           
 
 
     ranks = np.array(torch.cat(ranks, dim=0).type(torch.FloatTensor))
@@ -146,7 +146,7 @@ def main(args):
     model = triplet_utils.get_model(args)
     # Use GPU
     
-    checkpoint = torch.load(os.path.join(args.output_dir, 'state_dict.pt'), map_location='cpu')
+    checkpoint = torch.load(os.path.join(args.output_dir, 'state_dict.pt'), map_location='cuda')
 
     with torch.no_grad():
         model.load_state_dict(checkpoint['state_dict'])
@@ -177,7 +177,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Options for Knowledge Base Completion')
 
-    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    os.environ["TOKENIZERS_PARALLELISM"] = "true"
     # General
     parser.add_argument("--model", type=str, required=False, default='TripletTextBert',
                         help="model to use")

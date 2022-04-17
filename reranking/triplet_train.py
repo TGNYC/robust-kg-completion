@@ -4,10 +4,9 @@ import triplet_utils
 import random
 import numpy as np
 import json
-import typing
 import os
 from torch.utils.data import DataLoader
-import sys
+from importlib import import_module
 from tqdm import tqdm
 from triplet_evaluation import ranking_and_hits
 from TRIPLET_CONSTANTS import DATA_DIR, BERT_IDS
@@ -79,9 +78,9 @@ def main(args: argparse.ArgumentParser, writer=None):
     # optimizer
     optimizer = triplet_utils.get_optimizer(model, args)
 
-
     # loss function
-    loss_fn = torch.nn.BCEWithLogitsLoss()
+    loss_module = import_module(args.loss, "allrank.models.losses")
+    loss_fn = getattr(loss_module, args.loss)
 
     best_mrr = 0
     epochs_since_improvement = 0
@@ -125,7 +124,10 @@ def main(args: argparse.ArgumentParser, writer=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Options for Knowledge Base Completion')
-    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    os.environ["TOKENIZERS_PARALLELISM"] = "true"
+
+    parser.add_argument("--loss", type=str,
+                        help="loss type")
     # General
     parser.add_argument("--model", type=str, required=False, default='DistMult',
                         help="model to use")
@@ -163,7 +165,8 @@ if __name__ == '__main__':
     parser.add_argument("--teacher_lambda", type=float, default=0.5,
                         help="Whether to set hyperparameters from experiment")
     parser.add_argument("--temperature", type=float, default=1.,
-                        help="Scales logits")      
+                        help="Scales logits")
+
     args = parser.parse_args()
 
     args.eval_batch_size = args.eval_batch_size//args.topk
@@ -175,7 +178,8 @@ if __name__ == '__main__':
     args.bert_model = BERT_IDS[args.dataset]
 
 
-    try:   
+    try:
+        print(args)
         triplet_utils.set_model_dir(args)
         writer = SummaryWriter(args.output_dir)
         with open(os.path.join(args.output_dir, 'args.json'), 'w') as f:

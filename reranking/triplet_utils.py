@@ -81,7 +81,7 @@ def set_model_dir(args):
         model_dir = f'{args.dataset}/top{args.topk}/{args.model}/kd'
     else:
         model_dir = f'{args.dataset}/top{args.topk}/{args.model}/no_kd'
-    args.output_dir = os.path.abspath(os.path.join(args.save_dir, model_dir))
+    args.output_dir = os.path.abspath(os.path.join(os.path.join(args.save_dir, args.loss), model_dir ))
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
     print(f'Will save model to {args.output_dir}')
