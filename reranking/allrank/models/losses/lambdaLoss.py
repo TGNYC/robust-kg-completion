@@ -1,7 +1,7 @@
 import torch
 
-from reranking.allrank.data.dataset_loading import PADDED_Y_VALUE
-from reranking.allrank.models.losses import DEFAULT_EPS
+from allrank.data.dataset_loading import PADDED_Y_VALUE
+from allrank.models.losses import DEFAULT_EPS
 
 
 def lambdaLoss(y_pred, y_true, eps=DEFAULT_EPS, padded_value_indicator=PADDED_Y_VALUE, weighing_scheme=None, k=None, sigma=1., mu=10.,

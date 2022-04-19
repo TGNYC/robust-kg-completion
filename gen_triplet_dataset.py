@@ -22,7 +22,7 @@ def gen_topk_dataset(model, args, split, topk):
         count=0
         for batch in tqdm(eval_loader):
             if split == 'train':
-                queries, labels = batch[0].to('cuda', non_blocking=True), batch[1].to('cuda', non_blocking=True)
+                queries, labels = batch[0].to('cuda', non_blocking=True), batch[1].to('cuda', non_blocking=True) # TODO change back to CUDA
             else:
                 queries, labels, filtered_labels = batch[0].to('cuda', non_blocking=True), batch[1].to('cuda', non_blocking=True), batch[2].to('cuda', non_blocking=True)
 
@@ -70,13 +70,13 @@ def gen_topk_dataset(model, args, split, topk):
 def main(args):
     args.strategy = 'gen_triplets'
     model = utils.get_model(args)
-    checkpoint = torch.load(os.path.join(args.model_dir, 'state_dict.pt'), map_location='cpu')
+    checkpoint = torch.load(os.path.join(args.model_dir, 'state_dict.pt'), map_location='cuda')
     model.eval()
     # Use GPU
     if torch.cuda.is_available():
         model.to('cuda')
     else:
-        raise RuntimeError
+        model.to('cpu')
 
     with torch.no_grad():
         model.load_state_dict(checkpoint['state_dict'])

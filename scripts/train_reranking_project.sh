@@ -1,7 +1,7 @@
 #!/bin/bash
 dataset="FB15K_237_SPARSE"
 teacher_lambda="0.0"
-LOSSES="approxNDCG bce binary_listNet lambdaLoss listMLE listNet neuralNDCG ordinal pointwise rankNet"
+LOSSES="approxNDCG bce binary_listNet lambdaLoss listMLE listNet neuralNDCG pointwise rankNet" #todo: make sure we understand ordinal, see if can be added
 #python gen_triplet_dataset.py --model PretrainedBertResNet --dataset ${dataset} --model_dir saved_models/${dataset}/PretrainedBertResNet --topk 10
 
 cd reranking

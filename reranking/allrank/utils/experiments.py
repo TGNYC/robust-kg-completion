@@ -6,8 +6,8 @@ from typing import Dict, Any
 from attr import asdict
 from flatten_dict import flatten
 
-from reranking.allrank.config import Config
-from reranking.allrank.utils.ltr_logging import get_logger
+from allrank.config import Config
+from allrank.utils.ltr_logging import get_logger
 
 logger = get_logger()
 

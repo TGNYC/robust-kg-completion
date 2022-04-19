@@ -1,15 +1,15 @@
 import torch
 from torch.nn import BCELoss
 
-from reranking.allrank.data.dataset_loading import PADDED_Y_VALUE
-from reranking.allrank.models.model_utils import get_torch_device
+from allrank.data.dataset_loading import PADDED_Y_VALUE
+from allrank.models.model_utils import get_torch_device
 
 
-def with_ordinals(y, n, padded_value_indicator=PADDED_Y_VALUE):
+def with_ordinals(y, n=10, padded_value_indicator=PADDED_Y_VALUE):
     """
     Helper function for ordinal loss, transforming input labels to ordinal values.
     :param y: labels, shape [batch_size, slate_length]
-    :param n: number of ordinals
+    :param n: number of ordinals # seems to be num_classes??
     :param padded_value_indicator: an indicator of the y_true index containing a padded item, e.g. -1
     :return: ordinals, shape [batch_size, slate_length, n]
     """
@@ -22,7 +22,7 @@ def with_ordinals(y, n, padded_value_indicator=PADDED_Y_VALUE):
     return ordinals
 
 
-def ordinal(y_pred, y_true, n, padded_value_indicator=PADDED_Y_VALUE):
+def ordinal(y_pred, y_true, n=10, padded_value_indicator=PADDED_Y_VALUE):
     """
     Ordinal loss.
     :param y_pred: predictions from the model, shape [batch_size, slate_length, n]

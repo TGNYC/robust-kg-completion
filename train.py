@@ -192,5 +192,5 @@ if __name__ == '__main__':
             json.dump(args.__dict__, f, indent=2)
         main(args, writer)
     except KeyboardInterrupt:
-        os.rename(args.output_dir, args.output_dir+'terminated')
+        os.rename(args.output_dir, +'terminated')
         print('Interrupted')    

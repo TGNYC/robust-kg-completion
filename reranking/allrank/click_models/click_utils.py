@@ -3,8 +3,8 @@ from typing import List, Tuple, Union
 import numpy as np
 import torch
 
-from reranking.allrank.click_models.base import ClickModel
-from reranking.allrank.data.dataset_loading import PADDED_Y_VALUE
+from allrank.click_models.base import ClickModel
+from allrank.data.dataset_loading import PADDED_Y_VALUE
 
 
 def click_on_slates(slates: Union[Tuple[np.ndarray, np.ndarray], Tuple[torch.Tensor, torch.Tensor]],

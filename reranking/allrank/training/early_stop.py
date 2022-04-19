@@ -1,4 +1,4 @@
-from reranking.allrank.utils.ltr_logging import get_logger
+from allrank.utils.ltr_logging import get_logger
 
 logger = get_logger()
 

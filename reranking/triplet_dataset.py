@@ -32,7 +32,10 @@ class KbTextDataset(Dataset):
         e2s = np.array(df_kg[e2_col].tolist(), dtype=np.int64)    
         queries = np.repeat(df_kg[[e1_col, rel_col]].to_numpy(np.int64), e2s.shape[1], axis=0)
         
-        self.triplets = np.concatenate((queries, e2s.reshape(-1,1)), axis=1)
+        self.triplets = np.concatenate((queries, e2s.reshape(-1, 1)), axis=1)
+        print(df_kg[e1_col].to_numpy(np.int64))
+        print(df_kg[e2_col].to_numpy())
+        self.triplet_10s = np.array([df_kg[e1_col].to_numpy(np.int64), df_kg[rel_col].to_numpy(np.int64), df_kg[e2_col].to_numpy()]).T
 
         self.ent2id, self.ent2name, self.rel2id = triplet_utils.get_kg_dicts(self.args)
         self.id2ent = {v: k for k,v in self.ent2id.items()}
@@ -49,14 +52,17 @@ class KbTextDataset(Dataset):
 
         # unnormalized_scores = np.array([score for scores_list in triplets['scores'] for score in scores_list])
         
-        teacher_labels = softmax(torch.tensor(df_kg['logits'].tolist(), dtype=torch.float32)/self.args.temperature).numpy().flatten()
+        teacher_labels = softmax(torch.tensor(df_kg['logits'].tolist(), dtype=torch.float32)/self.args.temperature).numpy()
         teacher_labels *= self.args.teacher_lambda
         print(teacher_labels.shape)
         print(teacher_labels[0])
-        self.gold_labels = np.array(df_kg['labels'].tolist(), dtype=np.float32).flatten()
+        self.gold_labels = np.array(df_kg['labels'].tolist(), dtype=np.float32)
         self.labels = self.gold_labels*(1-self.args.teacher_lambda)
         self.labels += teacher_labels
-
+        print("teacher labels shape: {}".format(teacher_labels.shape))
+        print("label shape: {}".format(self.labels.shape))
+        print("triplets shape: {}".format(self.triplets.shape))
+        print("triplet_10s shape: {}".format(self.triplet_10s.shape))
         assert len(self.triplets) == self.labels.size
         # print(unnormalized_scores)
 
@@ -66,15 +72,27 @@ class KbTextDataset(Dataset):
 
 
     def __getitem__(self, idx):
-        triple = self.triplets[idx]
-        head_strings = ' '.join((f'[REL_{triple[1]}]', self.ent2name[self.id2ent[triple[0]]]))
-        tail_strings = ' '.join((f'[REL_{triple[1]}]', self.ent2name[self.id2ent[triple[2]]]))
-        encodings = self.tokenizer(text=head_strings, text_pair=tail_strings, is_split_into_words=False, padding='max_length', truncation=True, max_length=32)
-        item = {key: torch.tensor(val) for key, val in encodings.items()}
-        return item, self.labels[idx]  
+        triplet_10 = self.triplet_10s[idx]
+        e1 = triplet_10[0]
+        rel = triplet_10[1]
+        items = {}
+        for i, e2 in enumerate(triplet_10[2]):
+            e2 = np.int64(e2)
+            head_strings = ' '.join((f'[REL_{rel}]', self.ent2name[self.id2ent[e1]]))
+            tail_strings = ' '.join((f'[REL_{rel}]', self.ent2name[self.id2ent[e2]]))
+            encodings = self.tokenizer(text=head_strings, text_pair=tail_strings, is_split_into_words=False, padding='max_length', truncation=True, max_length=32)
+            item = {key: torch.tensor(val) for key, val in encodings.items()}
+            if i == 0:
+                for key in encodings.keys():
+                    items[key] = torch.zeros((0, 32), dtype=torch.int64)
+
+            for key in encodings.keys():
+                items[key] = torch.cat([items[key], item[key].unsqueeze(dim=0)], dim=0)
+
+        return items, self.labels[idx]
 
     def __len__(self):
-        return len(self.labels)
+        return self.labels.shape[0]
 
 
 class KbTextEvalGenerator(Dataset):

@@ -8,19 +8,19 @@ import pandas as pd
 import torch
 from attr import asdict
 
-from reranking.allrank.click_models.click_utils import click_on_slates
-from reranking.allrank.config import Config
-from reranking.allrank.data.dataset_loading import load_libsvm_dataset_role
-from reranking.allrank.data.dataset_saving import write_to_libsvm_without_masked
-from reranking.allrank.inference.inference_utils import rank_slates, metrics_on_clicked_slates
-from reranking.allrank.models.model import make_model
-from reranking.allrank.models.model_utils import get_torch_device, CustomDataParallel, load_state_dict_from_file
-from reranking.allrank.utils.args_utils import split_as_strings
-from reranking.allrank.utils.command_executor import execute_command
-from reranking.allrank.utils.config_utils import instantiate_from_recursive_name_args
-from reranking.allrank.utils.file_utils import create_output_dirs, PathsContainer, copy_local_to_gs
-from reranking.allrank.utils.ltr_logging import init_logger
-from reranking.allrank.utils.python_utils import all_equal
+from allrank.click_models.click_utils import click_on_slates
+from allrank.config import Config
+from allrank.data.dataset_loading import load_libsvm_dataset_role
+from allrank.data.dataset_saving import write_to_libsvm_without_masked
+from allrank.inference.inference_utils import rank_slates, metrics_on_clicked_slates
+from allrank.models.model import make_model
+from allrank.models.model_utils import get_torch_device, CustomDataParallel, load_state_dict_from_file
+from allrank.utils.args_utils import split_as_strings
+from allrank.utils.command_executor import execute_command
+from allrank.utils.config_utils import instantiate_from_recursive_name_args
+from allrank.utils.file_utils import create_output_dirs, PathsContainer, copy_local_to_gs
+from allrank.utils.ltr_logging import init_logger
+from allrank.utils.python_utils import all_equal
 
 
 def parse_args() -> Namespace:

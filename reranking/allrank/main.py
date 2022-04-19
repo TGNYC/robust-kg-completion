@@ -1,19 +1,19 @@
 from urllib.parse import urlparse
 
-import reranking.allrank.models.losses as losses
+import allrank.models.losses as losses
 import numpy as np
 import os
 import torch
-from reranking.allrank.config import Config
-from reranking.allrank.data.dataset_loading import load_libsvm_dataset, create_data_loaders
-from reranking.allrank.models.model import make_model
-from reranking.allrank.models.model_utils import get_torch_device, CustomDataParallel
-from reranking.allrank.training.train_utils import fit
-from reranking.allrank.utils.command_executor import execute_command
-from reranking.allrank.utils.experiments import dump_experiment_result, assert_expected_metrics
-from reranking.allrank.utils.file_utils import create_output_dirs, PathsContainer, copy_local_to_gs
-from reranking.allrank.utils.ltr_logging import init_logger
-from reranking.allrank.utils.python_utils import dummy_context_mgr
+from allrank.config import Config
+from allrank.data.dataset_loading import load_libsvm_dataset, create_data_loaders
+from allrank.models.model import make_model
+from allrank.models.model_utils import get_torch_device, CustomDataParallel
+from allrank.training.train_utils import fit
+from allrank.utils.command_executor import execute_command
+from allrank.utils.experiments import dump_experiment_result, assert_expected_metrics
+from allrank.utils.file_utils import create_output_dirs, PathsContainer, copy_local_to_gs
+from allrank.utils.ltr_logging import init_logger
+from allrank.utils.python_utils import dummy_context_mgr
 from argparse import ArgumentParser, Namespace
 from attr import asdict
 from functools import partial

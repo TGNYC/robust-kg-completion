@@ -11,8 +11,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from reranking.allrank.config import PositionalEncoding
-from reranking.allrank.models.positional import _make_positional_encoding
+from allrank.config import PositionalEncoding
+from allrank.models.positional import _make_positional_encoding
 
 
 def clones(module, N):

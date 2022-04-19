@@ -38,7 +38,16 @@ def train(model, trainloader, optimizer, loss_fn, args, epoch, writer=None, eval
         optimizer.zero_grad()
 
         # forward + backward + optimize
-        outputs = model(inputs)
+        #print("inputs element size: {}".format(inputs['input_ids'].size()))
+        #print("labelssize: {}".format(labels.size()))
+        outputs = torch.zeros(labels.size())
+        for j in range(labels.size()[-1]):
+            inputsj = {}
+            for key in inputs.keys():
+                inputsj[key] = inputs[key][:, j, :]
+            outputs[:, j] = model(inputsj)
+        #print("outputs.size(): {}".format(outputs.size()))
+        outputs = torch.sigmoid(outputs)
         loss = loss_fn(outputs, labels)
         running_loss += loss.item()
         loss.backward()
@@ -58,6 +67,7 @@ def main(args: argparse.ArgumentParser, writer=None):
     print('Setting seeds for reproducibility...')
     set_seeds(args.seed)
     train_dataset = triplet_utils.get_dataset('train', args)
+    print(train_dataset)
     trainloader = DataLoader(
         train_dataset, batch_size=args.batch_size, pin_memory=True, shuffle=True, num_workers=args.num_workers, drop_last=True)
     model = triplet_utils.get_model(args)
@@ -75,11 +85,12 @@ def main(args: argparse.ArgumentParser, writer=None):
     else:
         raise RuntimeError
 
+
     # optimizer
     optimizer = triplet_utils.get_optimizer(model, args)
 
     # loss function
-    loss_module = import_module(args.loss, "allrank.models.losses")
+    loss_module = import_module("allrank.models.losses.{}".format(args.loss))
     loss_fn = getattr(loss_module, args.loss)
 
     best_mrr = 0

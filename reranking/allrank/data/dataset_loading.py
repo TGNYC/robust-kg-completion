@@ -8,8 +8,8 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from torchvision.transforms import Compose
 
-from reranking.allrank.utils.file_utils import open_local_or_gs
-from reranking.allrank.utils.ltr_logging import get_logger
+from allrank.utils.file_utils import open_local_or_gs
+from allrank.utils.ltr_logging import get_logger
 
 logger = get_logger()
 PADDED_Y_VALUE = -1

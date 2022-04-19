@@ -178,7 +178,10 @@ if __name__ == '__main__':
         description='Options for Knowledge Base Completion')
 
     os.environ["TOKENIZERS_PARALLELISM"] = "true"
+
     # General
+    parser.add_argument("--loss", type=str,
+                        help="loss type")
     parser.add_argument("--model", type=str, required=False, default='TripletTextBert',
                         help="model to use")
     parser.add_argument("--dataset", type=str, required=False, default='SNOMED_CT_CORE',

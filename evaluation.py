@@ -25,7 +25,7 @@ def ranking_and_hits(model, eval_loader, args, write_ranks=False):
                 
             batch_ranks = torch.argsort(torch.argsort(preds, dim=1, descending=True), dim=1) + 1
 
-            ranks.append(batch_ranks[torch.nonzero(labels, as_tuple=True)].to('cpu'))           
+            ranks.append(batch_ranks[torch.nonzero(labels, as_tuple=True)].to('cuda'))
 
 
     ranks = np.array(torch.cat(ranks, dim=0).type(torch.FloatTensor))
@@ -52,7 +52,7 @@ def main(args):
     eval_loader = DataLoader(
         eval_dataset, batch_size=args.eval_batch_size, pin_memory=True, shuffle=False)
     model = utils.get_model(args)
-    checkpoint = torch.load(os.path.join(args.output_dir, 'state_dict.pt'), map_location='cpu')
+    checkpoint = torch.load(os.path.join(args.output_dir, 'state_dict.pt'), map_location='cuda')
 
     model.eval()
     with torch.no_grad():
@@ -62,7 +62,7 @@ def main(args):
     if torch.cuda.is_available():
         model.to('cuda')
     else:
-        raise RuntimeError
+        model.to('cpu')
 
     print("===========TEST============")
     metrics = ranking_and_hits(

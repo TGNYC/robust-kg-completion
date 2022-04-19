@@ -3,7 +3,7 @@ from itertools import product
 import torch
 from torch.nn import BCEWithLogitsLoss
 
-from reranking.allrank.data.dataset_loading import PADDED_Y_VALUE
+from allrank.data.dataset_loading import PADDED_Y_VALUE
 
 
 def rankNet_weightByGTDiff(y_pred, y_true, padded_value_indicator=PADDED_Y_VALUE):

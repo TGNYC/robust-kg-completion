@@ -7,8 +7,8 @@ import gcsfs
 from attr import attrib, attrs
 from pkg_resources import Requirement, resource_filename
 
-from reranking.allrank.utils.command_executor import execute_command
-from reranking.allrank.utils.ltr_logging import get_logger
+from allrank.utils.command_executor import execute_command
+from allrank.utils.ltr_logging import get_logger
 
 logger = get_logger()
 

@@ -4,9 +4,9 @@ import numpy as np
 import torch
 from scipy.spatial.distance import cdist
 
-from reranking.allrank.click_models.base import ClickModel
-from reranking.allrank.click_models.duplicate_aware import EverythingButDuplicatesClickModel
-from reranking.allrank.data.dataset_loading import PADDED_Y_VALUE
+from allrank.click_models.base import ClickModel
+from allrank.click_models.duplicate_aware import EverythingButDuplicatesClickModel
+from allrank.data.dataset_loading import PADDED_Y_VALUE
 
 
 class BaseCascadeModel(ClickModel):

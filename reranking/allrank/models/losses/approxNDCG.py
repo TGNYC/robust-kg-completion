@@ -1,10 +1,10 @@
 import torch
 
-from reranking.allrank.data.dataset_loading import PADDED_Y_VALUE
-from reranking.allrank.models.losses import DEFAULT_EPS
+from allrank.data.dataset_loading import PADDED_Y_VALUE
+from allrank.models.losses import DEFAULT_EPS
 
 
-def approxNDCGLoss(y_pred, y_true, eps=DEFAULT_EPS, padded_value_indicator=PADDED_Y_VALUE, alpha=1.):
+def approxNDCG(y_pred, y_true, eps=DEFAULT_EPS, padded_value_indicator=PADDED_Y_VALUE, alpha=1.):
     """
     Loss based on approximate NDCG introduced in "A General Approximation Framework for Direct Optimization of
     Information Retrieval Measures". Please note that this method does not implement any kind of truncation.
