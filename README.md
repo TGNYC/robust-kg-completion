@@ -1,12 +1,18 @@
-# Robust Knowledge Graph Completion with Stacked Convolutions and a Student Re-Ranking Network
+# Robust Knowledge Graph Completion with Stacked Convolutions and a Student Re-Ranking Network [Augmented] \
+Tejas Gupta, Ioana Marinescu, Levi Blinder 
 
-
-This repository contains the implementation for our paper ([link](https://arxiv.org/abs/2106.06555)): 
+This repository contains the implementation and modificications for the paper ([link](https://arxiv.org/abs/2106.06555)): 
 
 **Robust Knowledge Graph Completion with Stacked Convolutions and a Student Re-Ranking Network** \
 Justin Lovelace, Denis Newman-Griffis, Shikhar Vashishth, Jill Fain Lehman, and Carolyn Penstein Rosé \
 Annual Meeting of the Association for Computational Linguistics and the International Joint Conference on Natural Language Processing
 (**ACL-IJCNLP**) 2021
+
+**Modifications** \
+- To improve textual entity generation, we modified the existing transfoer to use [Phrase-BERT](https://aclanthology.org/2021.emnlp-main.846)
+- To use recent developments in ranking models for information retrieval, we implemented additional pointwise, pairwise, and listwise loss functions.
+
+See paper in repository for more details and results.
 
 ## Dependencies
 
